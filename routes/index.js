@@ -1,16 +1,20 @@
-const express = require("express");
-const axios = require("axios");
+const express = require('express');
+const axios = require('axios');
 const router = express.Router();
 
 /* GET Superheros by Name. */
-router.get("/search/:name", function (req, res, next) {
+router.get('/search/:name', function (req, res, next) {
   console.log(req.params.name);
   axios
     .get(
       `https://superheroapi.com/api/${process.env.ACCESS_TOKEN}/search/${req.params.name}`
     )
     .then(({ data }) => {
-      res.status(200).json(data.results);
+      if (data.results) {
+        res.status(200).json(data.results);
+      } else {
+        res.status(200).json([]);
+      }
     })
     .catch((err) => {
       res.status(500).json(err);
@@ -18,7 +22,7 @@ router.get("/search/:name", function (req, res, next) {
 });
 
 /* GET Superhero by ID */
-router.get("/superhero/:id", function (req, res, next) {
+router.get('/superhero/:id', function (req, res, next) {
   axios
     .get(
       `https://superheroapi.com/api/${process.env.ACCESS_TOKEN}/${req.params.id}`
